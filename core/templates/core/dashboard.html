@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hela Flex Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-900 text-gray-200 font-sans">
+
+    <!-- Sidebar -->
+    <div class="flex h-screen">
+        <aside class="w-64 bg-gray-800 p-6 flex flex-col justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-white mb-8">Hela Flex</h1>
+                <nav class="space-y-4">
+                    <a href="{% url 'core:dashboard' %}" class="block px-4 py-2 rounded bg-gray-700 text-white hover:bg-gray-600">Dashboard</a>
+                    <a href="{% url 'core:add_income' %}" class="block px-4 py-2 rounded bg-green-700 hover:bg-green-600">+ Add Income</a>
+                    <a href="{% url 'core:add_expense' %}" class="block px-4 py-2 rounded bg-red-700 hover:bg-red-600">+ Add Expense</a>
+                </nav>
+            </div>
+            <form action="{% url 'core:logout' %}" method="post" class="mt-8">
+                {% csrf_token %}
+                <button type="submit" class="w-full bg-red-600 hover:bg-red-500 text-white font-semibold py-2 px-4 rounded">
+                    Logout
+                </button>
+            </form>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto p-8">
+            <h2 class="text-3xl font-bold text-indigo-400 mb-6">Welcome, {{ user.username }}</h2>
+
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-gray-800 p-6 rounded-lg shadow text-center">
+                    <h3 class="text-lg font-semibold text-green-400">Total Income</h3>
+                    <p class="text-2xl font-bold mt-2 text-green-300">Ksh {{ total_income }}</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg shadow text-center">
+                    <h3 class="text-lg font-semibold text-red-400">Total Expenses</h3>
+                    <p class="text-2xl font-bold mt-2 text-red-300">Ksh {{ total_expense }}</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg shadow text-center">
+                    <h3 class="text-lg font-semibold text-blue-400">Net Savings</h3>
+                    <p class="text-2xl font-bold mt-2 text-blue-300">Ksh {{ net_savings }}</p>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow mb-10">
+                <h3 class="text-xl font-semibold mb-4 text-indigo-300">Overview Chart</h3>
+                <canvas id="financeChart" height="100"></canvas>
+            </div>
+
+            <!-- Income History -->
+            <div class="mb-10">
+                <h3 class="text-2xl font-semibold text-indigo-300 mb-4">Income Entries</h3>
+                <ul class="space-y-2">
+                    {% for income in incomes %}
+                        <li class="bg-gray-700 p-4 rounded shadow flex justify-between">
+                            <span>{{ income.date }} – {{ income.source }}</span>
+                            <span class="font-semibold text-green-300">Ksh {{ income.amount }}</span>
+                        </li>
+                    {% empty %}
+                        <li class="text-gray-400 italic">No income entries yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Expense History -->
+            <div class="mb-10">
+                <h3 class="text-2xl font-semibold text-indigo-300 mb-4">Expense Entries</h3>
+                <ul class="space-y-2">
+                    {% for expense in expenses %}
+                        <li class="bg-gray-700 p-4 rounded shadow flex justify-between">
+                            <span>{{ expense.date }} – {{ expense.category }}</span>
+                            <span class="font-semibold text-red-300">Ksh {{ expense.amount }}</span>
+                        </li>
+                    {% empty %}
+                        <li class="text-gray-400 italic">No expense entries yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <!-- Chart.js Script -->
+    <script>
+        const ctx = document.getElementById('financeChart').getContext('2d');
+        const financeChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Income', 'Expenses'],
+                datasets: [{
+                    label: 'Financial Overview',
+                    data: [{{ total_income }}, {{ total_expense }}],
+                    backgroundColor: ['#10B981', '#EF4444'],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#ccc' }
+                    },
+                    x: {
+                        ticks: { color: '#ccc' }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#ccc'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
