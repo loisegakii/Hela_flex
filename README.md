@@ -1,15 +1,17 @@
 # Hela Flex 
 
-**Hela Flex** is a personal finance and project management tool built with Django. It helps users manage their income, expenses, projects, and savings efficiently.
+**Hela Flex** is a simple yet powerful personal finance management tool built specifically for gig and casual workers who want better control over their income, expenses, and savings.
 
-##  Features
+## Built with Django, Hela Flex allows users to:
 
-- Add income and expense entries
-- Track savings progress
-- Manage and mark project payments
-- Auto-populate income from paid projects
-- Visual dashboard with charts
+-Log daily or irregular income from various gigs.
+-Track expenses and monitor net savings in real time.
+-Create and manage short-term projects or tasks (like freelance jobs or contracts).
+-Automatically record income when a project is marked as paid.
+-Apply for loans with built-in eligibility checks.
+-Visualize income vs. expenses and savings goals through a clean dashboard.
 
+**-------------------------------------------------------------------------------------------------------------------------------------------------------------**
 ## Tech Stack
 
 - Backend: Django
