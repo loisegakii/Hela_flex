@@ -16,7 +16,7 @@
 
 - Backend: Django
 - Frontend: HTML, Tailwind CSS (via CDN)
-- Database: SQLite (default)
+- Database: PostGresQL
 
 ## Setup Instructions
 
