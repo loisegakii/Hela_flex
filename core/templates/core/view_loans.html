@@ -1,0 +1,31 @@
+<h2>My Loans</h2>
+<table>
+  <tr>
+    <th>Amount</th>
+    <th>Interest</th>
+    <th>Total Due</th>
+    <th>Status</th>
+    <th>Action</th>
+  </tr>
+  {% for loan in loans %}
+  <tr>
+    <td>{{ loan.amount }}</td>
+    <td>{{ loan.interest_rate }}%</td>
+    <td>{{ loan.total_due }}</td>
+    <td>
+      {% if loan.is_repaid %}
+        Repaid
+      {% elif loan.is_approved %}
+        Approved
+      {% else %}
+        Pending
+      {% endif %}
+    </td>
+    <td>
+      {% if loan.is_approved and not loan.is_repaid %}
+        <a href="{% url 'core:repay_loan' loan.id %}">Repay</a>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>

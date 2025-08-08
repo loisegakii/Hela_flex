@@ -1,0 +1,11 @@
+<h2>{{ project.name }}</h2>
+<p>{{ project.description }}</p>
+
+<h3 class="mt-4">Incomes for this project:</h3>
+<ul>
+  {% for income in incomes %}
+    <li>{{ income.description }} - {{ income.amount }}</li>
+  {% empty %}
+    <li>No income recorded for this project.</li>
+  {% endfor %}
+</ul>

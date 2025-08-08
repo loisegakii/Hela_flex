@@ -15,11 +15,22 @@
                 <h1 class="text-2xl font-bold text-white mb-8">Hela Flex</h1>
                 <nav class="space-y-4">
                     <a href="{% url 'core:dashboard' %}" class="block px-4 py-2 rounded bg-gray-700 text-white hover:bg-gray-600">Dashboard</a>
+                    <a href="{% url 'core:projects' %}" class="block px-4 py-2 rounded bg-purple-700 hover:bg-purple-600 text-white">Manage Your Projects</a>
                     <a href="{% url 'core:add_income' %}" class="block px-4 py-2 rounded bg-green-700 hover:bg-green-600">+ Add Income</a>
                     <a href="{% url 'core:add_expense' %}" class="block px-4 py-2 rounded bg-red-700 hover:bg-red-600">+ Add Expense</a>
+                    <a href="{% url 'core:view_loans' %}" class="block px-4 py-2 rounded bg-blue-700 hover:bg-blue-600 text-white">$ Apply for Loan</a>
                 </nav>
             </div>
-            <form action="{% url 'core:logout' %}" method="post" class="mt-8">
+
+            <!-- Reset All Data Button -->
+            <form method="POST" action="{% url 'core:reset_data' %}" class="mt-6" onsubmit="return confirm('Are you sure you want to reset all your data? This cannot be undone.')">
+                {% csrf_token %}
+                <button type="submit" class="w-full bg-yellow-700 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded">
+                    Reset All My Data
+                </button>
+            </form>
+
+            <form action="{% url 'core:logout' %}" method="post" class="mt-4">
                 {% csrf_token %}
                 <button type="submit" class="w-full bg-red-600 hover:bg-red-500 text-white font-semibold py-2 px-4 rounded">
                     Logout
@@ -32,7 +43,7 @@
             <h2 class="text-3xl font-bold text-indigo-400 mb-6">Welcome, {{ user.username }}</h2>
 
             <!-- Summary Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 <div class="bg-gray-800 p-6 rounded-lg shadow text-center">
                     <h3 class="text-lg font-semibold text-green-400">Total Income</h3>
                     <p class="text-2xl font-bold mt-2 text-green-300">Ksh {{ total_income }}</p>
@@ -42,13 +53,27 @@
                     <p class="text-2xl font-bold mt-2 text-red-300">Ksh {{ total_expense }}</p>
                 </div>
                 <div class="bg-gray-800 p-6 rounded-lg shadow text-center">
-                    <h3 class="text-lg font-semibold text-blue-400">Net Savings</h3>
+                    <h3 class="text-lg font-semibold text-blue-400">Net Income</h3>
                     <p class="text-2xl font-bold mt-2 text-blue-300">Ksh {{ net_savings }}</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg shadow text-center">
+                    <h3 class="text-lg font-semibold text-yellow-400">Savings (10%)</h3>
+                    <p class="text-2xl font-bold mt-2 text-yellow-300">Ksh {{ savings|floatformat:2 }}</p>
                 </div>
             </div>
 
+            <!-- Savings Progress Bar -->
+            <div class="bg-white rounded-lg shadow-md p-4 mt-6 text-gray-800">
+                <h3 class="text-lg font-semibold mb-2">Savings Progress</h3>
+                <p class="mb-1">Ksh {{ savings }} saved</p>
+                <div class="w-full bg-gray-200 rounded-full h-4">
+                    <div class="bg-green-500 h-4 rounded-full" style="width: {{ savings_percentage }}%"></div>
+                </div>
+                <p class="text-sm text-gray-600 mt-1">{{ savings_percentage }}% of goal (Ksh {{ savings_goal }})</p>
+            </div>
+
             <!-- Chart Section -->
-            <div class="bg-gray-800 p-6 rounded-lg shadow mb-10">
+            <div class="bg-gray-800 p-6 rounded-lg shadow mb-10 mt-10">
                 <h3 class="text-xl font-semibold mb-4 text-indigo-300">Overview Chart</h3>
                 <canvas id="financeChart" height="100"></canvas>
             </div>

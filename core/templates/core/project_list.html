@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Projects</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+  <div class="max-w-7xl mx-auto px-4 py-10">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-semibold text-gray-800">Your Projects</h2>
+      <div class="space-x-2">
+        <a href="{% url 'core:dashboard' %}" class="px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded transition">
+          ← Back to Dashboard
+        </a>
+        <a href="{% url 'core:create_project' %}" class="px-4 py-2 bg-green-600 hover:bg-green-500 text-white rounded transition">
+          + New Project
+        </a>
+        <a href="{% url 'core:print_invoice' %}" target="_blank" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded transition">
+          🧾 Print Invoice
+        </a>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto shadow-md rounded-lg bg-white">
+      <table class="min-w-full text-sm text-left text-gray-700">
+        <thead class="bg-gray-100 uppercase text-xs text-gray-600">
+          <tr>
+            <th class="px-6 py-3">Account Name</th>
+            <th class="px-6 py-3">Task</th>
+            <th class="px-6 py-3">Amount</th>
+            <th class="px-6 py-3">Status</th>
+            <th class="px-6 py-3">Start Date</th>
+            <th class="px-6 py-3">Paid Date</th>
+            <th class="px-6 py-3">Details</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          {% for project in projects %}
+            <tr>
+              <td class="px-6 py-4 font-medium">{{ project.account_name }}</td>
+              <td class="px-6 py-4">{{ project.task }}</td>
+              <td class="px-6 py-4">Ksh {{ project.amount }}</td>
+              <td class="px-6 py-4">
+                {% if project.status == "paid" %}
+                  <span class="text-green-600 font-semibold">Paid</span>
+                {% else %}
+                  <span class="text-yellow-600 font-semibold capitalize">{{ project.status }}</span>
+                {% endif %}
+              </td>
+              <td class="px-6 py-4">{{ project.created_at|date:"M d, Y" }}</td>
+              <td class="px-6 py-4">
+                {% if project.paid_at %}
+                  {{ project.paid_at|date:"M d, Y" }}
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+              <td class="px-6 py-4">
+                <a href="{% url 'core:project_detail' project.id %}" class="text-blue-600 hover:underline">View</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="7" class="text-center px-6 py-4 text-gray-500">No projects found.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+        {% if projects %}
+        <tfoot class="bg-gray-100 text-gray-800 text-sm font-semibold">
+          <tr>
+            <td colspan="2" class="px-6 py-4 text-right">Total</td>
+            <td class="px-6 py-4">
+              Ksh {{ total_project_amount }}
+            </td>
+            <td colspan="4"></td>
+          </tr>
+        </tfoot>
+        {% endif %}
+      </table>
+    </div>
+  </div>
+
+</body>
+</html>

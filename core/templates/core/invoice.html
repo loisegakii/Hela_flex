@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 40px; }
+    h2 { margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f0f0f0; }
+  </style>
+</head>
+<body>
+  <h2>Invoice for {{ user.username }}</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Account</th>
+        <th>Task</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Start Date</th>
+        <th>Paid Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for project in projects %}
+      <tr>
+        <td>{{ project.account_name }}</td>
+        <td>{{ project.task }}</td>
+        <td>Ksh {{ project.amount }}</td>
+        <td>{{ project.status }}</td>
+        <td>{{ project.created_at|date:"M d, Y" }}</td>
+        <td>
+          {% if project.paid_at %}
+            {{ project.paid_at|date:"M d, Y" }}
+          {% else %}-{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2"><strong>Total</strong></td>
+        <td><strong>Ksh {{ total_project_amount }}</strong></td>
+        <td colspan="3"></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <p>Thank you for your work!</p>
+</body>
+</html>
